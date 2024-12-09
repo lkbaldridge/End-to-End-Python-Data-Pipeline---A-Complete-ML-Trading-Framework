@@ -168,8 +168,8 @@ def select_l1_rf_features(
     print('\n')
 
     for key in list(features_dict_l1.keys()):
-        print(f'{key} - Number of features chosen by L1: {len(features_dict_l1[key])},
-              '
+        print(f'{key} - Number of features chosen by L1: {len(features_dict_l1[key])}',
+              
               f'Number of starting features: {len(df_dict[key].columns.to_list())}')
         
     print('\n')
