@@ -1,5 +1,5 @@
 from IPython.display import display, HTML, Image
-import pandas
+import pandas as pd
 from typing import Dict, Any, Union
 
 def display_side_by_side(*args: Union[pd.DataFrame, pd.Series]):
@@ -58,3 +58,48 @@ def get_column_indexes(df: pd.DataFrame) -> Dict[int, str]:
     """
     col_dict = {i: df.columns[i] for i in range(len(df.columns))}
     return col_dict
+
+def check_same_length_and_identify(dataframes: Dict[str, Any]) -> bool | Dict[str, int]:
+    """
+        Checks if all DataFrames in a dictionary have the same length and identifies
+        the DataFrames that have lengths different from the majority.
+
+        Args:
+            dataframes (Dict[str, Any]): A dictionary where keys are strings and values
+                are pandas DataFrames.
+
+        Returns:
+            bool: True if all DataFrames have the same length, 
+                otherwise returns a dictionary where keys are the names of the
+                DataFrames with lengths different from the most common length, and
+                values are their lengths.
+    """
+
+
+    lengths = {key: len(df) for key, df in dataframes.items()} 
+    
+    # Find the most common length
+    most_common_length = max(set(lengths.values()), key=list(lengths.values()).count)
+
+    # Identify DataFrames with lengths different from the most common length
+    different_lengths = {key: length for key, length in lengths.items() if length != most_common_length}
+
+    # Check if first and last index are the same
+    first_index = next(iter(dataframes.values())).index[0]
+    last_index = next(iter(dataframes.values())).index[-1]
+
+    different_indices = {}
+    for key, df in dataframes.items():
+        if df.index[0] != first_index or df.index[-1] != last_index:
+            different_indices[key] = {"first_index": df.index[0], "last_index": df.index[-1]}
+
+    if not different_lengths:
+        print("All DataFrames have the same length.")
+    else:
+        return different_lengths  # Return DataFrames with different lengths
+    
+    if not different_indices:
+        print("All DataFrames have the same first and last index.")
+    else:
+        return different_indices
+    return True

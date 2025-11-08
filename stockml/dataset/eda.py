@@ -78,7 +78,12 @@ def categorize_instances(y_df, lower_bound, upper_bound):
     y_copy = y_df[['change_shift', 'diff_shift']].copy()
     y_copy['change_encoded'] = y_copy['change_shift'].apply(lambda x: -1 if x < pct_lb else (1 if x > pct_ub else 0))
 
-    labels_histogram = px.histogram(y_copy['change_encoded'])
+    labels_histogram = px.histogram(y_copy['change_encoded'], histnorm='')
+    labels_histogram.update_traces(
+        marker_line_width=2,
+        marker_line_color="darkslategray",
+    )
+
     labels_histogram.show()
 
     return y_copy
